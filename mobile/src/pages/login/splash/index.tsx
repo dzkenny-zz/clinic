@@ -13,8 +13,9 @@ import { login } from '../../../actions/auth';
 import { useStores } from '../../../stores';
 import { useNavigation } from '@react-navigation/native';
 import { ActionState } from '../../../models/common';
+import { observer } from 'mobx-react';
 
-const SplashPage = () => {
+const SplashPage = observer(() => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const stores = useStores();
@@ -54,6 +55,9 @@ const SplashPage = () => {
                                     disabled={isLoading}
                                 />
                             </Item>
+                            <View>
+                                <Text style={styles.errorMessage}>{ stores.userStore.errorMsg }</Text>
+                            </View>
                         </View>
                         <View>
                             <Button onPress={onLogin}>
@@ -65,7 +69,7 @@ const SplashPage = () => {
             </SafeAreaView>
         </>
     );
-};
+});
 
 const styles = StyleSheet.create({
     scrollView: {
@@ -84,6 +88,10 @@ const styles = StyleSheet.create({
         resizeMode: 'stretch',
         width: 600,
         maxWidth: '100%'
+    },
+    errorMessage: {
+        height: 24,
+        color: '#ff3333'
     }
 });
 

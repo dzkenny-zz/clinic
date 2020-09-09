@@ -8,6 +8,11 @@ brew install watchman
 #install cocoapods
 sudo gem install cocoapods
 
+#install android studio for android
+https://developer.android.com/studio
+
+#install xcode for ios
+
 #download modules
 yarn install
 
@@ -24,19 +29,3 @@ https://mobx-react.js.org/
 https://reactnative.dev/docs/activityindicator
 3 - native-base
 https://docs.nativebase.io/
-
-#pages
-usage:
- - all specific screens should be put here
-
- #services
- usage:
- - all library or minor function should be code here
-
- #stores
- usage:
- - all data should be save here
-
- #utils
- usage:
-  - common function, i.e. date converter

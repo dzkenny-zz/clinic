@@ -3,22 +3,22 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {TokenService} from '@loopback/authentication';
+import { TokenService } from '@loopback/authentication';
 import {
   Credentials,
   TokenServiceBindings,
   UserServiceBindings
 } from '@loopback/authentication-jwt';
-import {inject} from '@loopback/core';
-import {model, property, repository} from '@loopback/repository';
-import {getModelSchemaRef, post, requestBody} from '@loopback/rest';
-import {SecurityBindings, UserProfile} from '@loopback/security';
-import {genSalt, hash} from 'bcryptjs';
+import { inject } from '@loopback/core';
+import { model, property, repository } from '@loopback/repository';
+import { getModelSchemaRef, post, requestBody } from '@loopback/rest';
+import { SecurityBindings, UserProfile } from '@loopback/security';
+import { genSalt, hash } from 'bcryptjs';
 import _ from 'lodash';
-import {User} from '../models';
-import {Clinic} from '../models/clinic.model';
-import {ClinicRepository, UserRepository} from '../repositories';
-import {UserService} from '../services/user.service';
+import { User, Response } from '../models';
+import { Clinic } from '../models/clinic.model';
+import { ClinicRepository, UserRepository } from '../repositories';
+import { UserService } from '../services/user.service';
 
 @model()
 export class NewUserRequest extends User {
@@ -52,12 +52,10 @@ const CredentialsSchema = {
   required: ['email', 'password'],
   properties: {
     email: {
-      type: 'string',
-      format: 'email',
+      type: 'string'
     },
     password: {
-      type: 'string',
-      minLength: 8,
+      type: 'string'
     },
   },
 };
@@ -66,7 +64,7 @@ export const CredentialsRequestBody = {
   description: 'The input of login function',
   required: true,
   content: {
-    'application/json': {schema: CredentialsSchema},
+    'application/json': { schema: CredentialsSchema },
   },
 };
 
@@ -76,13 +74,13 @@ export class UserController {
     public jwtService: TokenService,
     @inject(UserServiceBindings.USER_SERVICE)
     public userService: UserService,
-    @inject(SecurityBindings.USER, {optional: true})
+    @inject(SecurityBindings.USER, { optional: true })
     public user: UserProfile,
     @repository(UserRepository)
     protected userRepository: UserRepository,
     @repository(ClinicRepository)
     protected clinicRepository: ClinicRepository
-  ) {}
+  ) { }
 
   @post('/login', {
     responses: {
@@ -105,15 +103,54 @@ export class UserController {
   })
   async login(
     @requestBody(CredentialsRequestBody) credentials: Credentials,
-  ): Promise<{token: string}> {
-    // ensure the user exists, and the password is correct
-    const user = await this.userService.verifyCredentials(credentials);
-    // convert a User object into a UserProfile object (reduced set of properties)
-    const userProfile = this.userService.convertToUserProfile(user);
+  ): Promise<Response> {
+    // check credentials first
+    let userProfile;
+    try {
+      // ensure the user exists, and the password is correct
+      const user = await this.userService.verifyCredentials(credentials);
+
+      // convert a User object into a UserProfile object (reduced set of properties)
+      userProfile = this.userService.convertToUserProfile(user);
+    } catch (error) {
+      // 401 = invalid username and password
+      if (error.status === 401) {
+        return new Response({
+          code: 401,
+          message: 'Invalid email or password.'
+        });
+      } 
+      // unknow error, redirect error
+      else {
+        return new Response({
+          code: error.status,
+          message: error.message
+        });
+      }
+    }
 
     // create a JSON Web Token based on the user profile
     const token = await this.jwtService.generateToken(userProfile);
-    return {token};
+
+    // get clinic information when login
+    const clinic = await this.clinicRepository.findOne({
+      where: { id: userProfile.id }
+    });
+
+    if (!clinic) {
+      return new Response({
+        code: 500,
+        message: 'no clinic information found'
+      });
+    }
+
+    return new Response({
+      code: 200,
+      payload: {
+        token,
+        clinic: _.assign({}, clinic, { email: userProfile.email })
+      }
+    });
   }
 
   @post('/signup', {
@@ -141,12 +178,19 @@ export class UserController {
       },
     })
     newUserRequest: NewUserRequest,
-  ): Promise<User> {
+  ): Promise<Response> {
+    // encrypt password
     const password = await hash(newUserRequest.password, await genSalt());
+
+    //create user
     const savedUser = await this.userRepository.create(
       _.omit(newUserRequest, ['password', 'name', 'phone', 'address'])
     );
 
+    // create user credentials record
+    await this.userRepository.userCredentials(savedUser.id).create({ password });
+
+    // create clinic information
     const clinic = new Clinic({
       id: savedUser.id,
       name: newUserRequest.name,
@@ -155,11 +199,14 @@ export class UserController {
     });
 
     // create clinic record
-    await this.clinicRepository.create(clinic);
+    const savedClinic = await this.clinicRepository.create(clinic);
 
-    // create user credentials record
-    await this.userRepository.userCredentials(savedUser.id).create({password});
-
-    return savedUser;
+    return new Response({
+      code: 200,
+      payload: {
+        user: savedUser,
+        clinic: _.assign({}, savedClinic, { email: savedUser.email })
+      }
+    });
   }
 }

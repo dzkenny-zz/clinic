@@ -1,5 +1,6 @@
 import { observable, action } from 'mobx';
 import { ActionState } from '../models/common';
+import { Clinic } from '../models/clinic';
 
 export class UserStore {
     @observable
@@ -8,6 +9,11 @@ export class UserStore {
     @observable 
     token: string = '';
 
+    @observable
+    clinic: Clinic = new Clinic();
+
+    @observable
+    errorMsg: string = '';
 
     @action
     setLoginState = (loginState: ActionState) => {
@@ -17,6 +23,16 @@ export class UserStore {
     @action 
     setToken = (token: string) => {
         this.token = token;
+    }
+
+    @action
+    setClinic = (clinic: Clinic) => {
+        this.clinic = clinic;
+    }
+
+    @action
+    setErrorMessage = (errorMsg: string = '') => {
+        this.errorMsg = errorMsg;
     }
 }
 

@@ -18,16 +18,17 @@ type LogoutType = {
 export async function login({ email, password, stores, navigation }: LoginType) {
     try {
         stores.userStore.setLoginState(ActionState.IN_PROGRESS);
-        const result = await userLogin(email, password);
-        // if result return token, means login success
-        if (result.token) {
-            stores.userStore.setToken(result.token);
-        }
+        const { token, clinic } = await userLogin(email, password);
+
+        stores.userStore.setToken(token);
+        stores.userStore.setClinic(clinic);
         
-        // navigation.dispatch(StackActions.replace('Home'));
+        navigation.dispatch(StackActions.replace('Home'));
+        stores.userStore.setErrorMessage('');
         stores.userStore.setLoginState(ActionState.SUCCESS);
     } catch(error) {
         console.log(error);
+        stores.userStore.setErrorMessage(error.message);
         stores.userStore.setLoginState(ActionState.FAILURE);
     }
 }

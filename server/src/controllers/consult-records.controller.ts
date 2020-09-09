@@ -15,7 +15,7 @@ import {
   requestBody
 } from '@loopback/rest';
 import {SecurityBindings, UserProfile} from '@loopback/security';
-import {ConsultRecord} from '../models';
+import {ConsultRecord, Response} from '../models';
 import {ConsultRecordRepository} from '../repositories';
 
 export class ConsultRecordsController {
@@ -46,25 +46,27 @@ export class ConsultRecordsController {
       },
     })
     consultRecord: Omit<ConsultRecord, 'id'>,
-  ): Promise<ConsultRecord> {
-    consultRecord.clinicId = currentUserProfile.id;
-    return this.consultRecordRepository.create(consultRecord);
-  }
+  ): Promise<Response> {
+    try {
+      // create consult record
+      consultRecord.clinicId = currentUserProfile.id;
+      const savedConsultRecord = await this.consultRecordRepository.create(consultRecord);
 
-  @authenticate('jwt')
-  @get('/consult-records/count', {
-    responses: {
-      '200': {
-        description: 'ConsultRecord model count',
-        content: {'application/json': {schema: CountSchema}},
-      },
-    },
-  })
-  async count(
-    @inject(SecurityBindings.USER) currentUserProfile: UserProfile,
-    @param.where(ConsultRecord) where?: Where<ConsultRecord>,
-  ): Promise<Count> {
-    return this.consultRecordRepository.count(where);
+      console.log(`success create consult record: ${savedConsultRecord.id}`);
+      return new Response({
+        code: 201,
+        payload: {
+          id: savedConsultRecord.id
+        }
+      });
+    } catch(error) {
+      console.error(`cannot create consult record: ${error.message}`);
+      return new Response({
+        code: 304,
+        message: 'cannot create consult record'
+      });
+    }
+    
   }
 
   @authenticate('jwt')
@@ -85,10 +87,25 @@ export class ConsultRecordsController {
   })
   async find(
     @inject(SecurityBindings.USER) currentUserProfile: UserProfile,
-  ): Promise<ConsultRecord[]> {
-    return this.consultRecordRepository.find({
-      where: {clinicId: currentUserProfile.id}
-    });
+  ): Promise<Response> {
+    try {
+      // get consult records by id
+      const consultRecords: ConsultRecord[] = await this.consultRecordRepository.find({
+        where: {clinicId: currentUserProfile.id}
+      });
+      return new Response({
+        code: 200,
+        payload: {
+          values: consultRecords
+        }
+      })
+    } catch(error) {
+      console.error(`cannot get consult records: ${error.message}`);
+      return new Response({
+        code: 500,
+        message: 'Cannot found relative consult records'
+      });
+    }
   }
 
   @authenticate('jwt')
@@ -106,10 +123,24 @@ export class ConsultRecordsController {
   })
   async findById(
     @inject(SecurityBindings.USER) currentUserProfile: UserProfile,
-    @param.path.string('id') id: string,
-    @param.filter(ConsultRecord, {exclude: 'where'}) filter?: FilterExcludingWhere<ConsultRecord>
-  ): Promise<ConsultRecord> {
-    return this.consultRecordRepository.findById(id, filter);
+    @param.path.string('id') id: string
+  ): Promise<Response> {
+    try {
+      const consultRecord = await this.consultRecordRepository.findById(id);
+      return new Response({
+        code: 200,
+        payload: {
+          value: consultRecord
+        }
+      })
+    } catch(error) {
+      console.error(`cannot found consult record: ${error.message}`);
+      return new Response({
+        code: 500,
+        message: 'Cannot found relative consult record'
+      });
+    }
+    
   }
 
   @authenticate('jwt')
@@ -124,8 +155,19 @@ export class ConsultRecordsController {
     @inject(SecurityBindings.USER) currentUserProfile: UserProfile,
     @param.path.string('id') id: string,
     @requestBody() consultRecord: ConsultRecord,
-  ): Promise<void> {
-    await this.consultRecordRepository.replaceById(id, consultRecord);
+  ): Promise<Response> {
+    try{
+      await this.consultRecordRepository.replaceById(id, consultRecord);
+      return new Response({
+        code: 204
+      });
+    } catch(error) {
+      console.error(`Cannot update consult record: ${error.message}`);
+      return new Response({
+        code: 304,
+        message: error.message
+      });
+    }
   }
 
   @authenticate('jwt')
@@ -139,7 +181,18 @@ export class ConsultRecordsController {
   async deleteById(
     @inject(SecurityBindings.USER) currentUserProfile: UserProfile,
     @param.path.string('id') id: string
-  ): Promise<void> {
-    await this.consultRecordRepository.deleteById(id);
+  ): Promise<Response> {
+    try{
+      await this.consultRecordRepository.deleteById(id);
+      return new Response({
+        code: 204
+      });
+    } catch(error) {
+      console.error(`Cannot delete consult record: ${error.message}`);
+      return new Response({
+        code: 304,
+        message: error.message
+      });
+    }
   }
 }

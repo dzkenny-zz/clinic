@@ -18,28 +18,28 @@ export class UserService implements JwtUserService<User, Credentials> {
 
   async verifyCredentials(credentials: Credentials): Promise<User> {
     const invalidCredentialsError = 'Invalid email or password.';
-    console.log(1);
+    
+    // found user by email
     const foundUser = await this.userRepository.findOne({
       where: {email: credentials.email},
     });
-    console.log(2);
     if (!foundUser) {
       throw new HttpErrors.Unauthorized(invalidCredentialsError);
     }
-    console.log(3);
+
+    // find credentials by email
     const credentialsFound = await this.userRepository.findCredentials(
       foundUser.id,
     );
-    console.log(4);
     if (!credentialsFound) {
       throw new HttpErrors.Unauthorized(invalidCredentialsError);
     }
-    console.log(5);
+
+    // check password
     const passwordMatched = await compare(
       credentials.password,
       credentialsFound.password,
     );
-    console.log(6);
     if (!passwordMatched) {
       throw new HttpErrors.Unauthorized(invalidCredentialsError);
     }
