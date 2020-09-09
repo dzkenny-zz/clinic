@@ -3,7 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {authenticate, TokenService} from '@loopback/authentication';
+import {TokenService} from '@loopback/authentication';
 import {
   Credentials,
   TokenServiceBindings,
@@ -11,12 +11,13 @@ import {
 } from '@loopback/authentication-jwt';
 import {inject} from '@loopback/core';
 import {model, property, repository} from '@loopback/repository';
-import {get, getModelSchemaRef, post, requestBody} from '@loopback/rest';
-import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
+import {getModelSchemaRef, post, requestBody} from '@loopback/rest';
+import {SecurityBindings, UserProfile} from '@loopback/security';
 import {genSalt, hash} from 'bcryptjs';
 import _ from 'lodash';
 import {User} from '../models';
-import {UserRepository} from '../repositories';
+import {Clinic} from '../models/clinic.model';
+import {ClinicRepository, UserRepository} from '../repositories';
 import {UserService} from '../services/user.service';
 
 @model()
@@ -26,6 +27,24 @@ export class NewUserRequest extends User {
     required: true,
   })
   password: string;
+
+  @property({
+    type: 'string',
+    required: true
+  })
+  name: string;
+
+  @property({
+    type: 'string',
+    required: true
+  })
+  phone: string;
+
+  @property({
+    type: 'string',
+    required: true
+  })
+  address: string;
 }
 
 const CredentialsSchema = {
@@ -59,10 +78,13 @@ export class UserController {
     public userService: UserService,
     @inject(SecurityBindings.USER, {optional: true})
     public user: UserProfile,
-    @repository(UserRepository) protected userRepository: UserRepository,
+    @repository(UserRepository)
+    protected userRepository: UserRepository,
+    @repository(ClinicRepository)
+    protected clinicRepository: ClinicRepository
   ) {}
 
-  @post('/users/login', {
+  @post('/login', {
     responses: {
       '200': {
         description: 'Token',
@@ -94,24 +116,6 @@ export class UserController {
     return {token};
   }
 
-  @authenticate('jwt')
-  @get('/whoAmI', {
-    responses: {
-      '200': {
-        description: '',
-        schema: {
-          type: 'string',
-        },
-      },
-    },
-  })
-  async whoAmI(
-    @inject(SecurityBindings.USER)
-    currentUserProfile: UserProfile,
-  ): Promise<string> {
-    return currentUserProfile[securityId];
-  }
-
   @post('/signup', {
     responses: {
       '200': {
@@ -140,9 +144,20 @@ export class UserController {
   ): Promise<User> {
     const password = await hash(newUserRequest.password, await genSalt());
     const savedUser = await this.userRepository.create(
-      _.omit(newUserRequest, 'password'),
+      _.omit(newUserRequest, ['password', 'name', 'phone', 'address'])
     );
 
+    const clinic = new Clinic({
+      id: savedUser.id,
+      name: newUserRequest.name,
+      phone: newUserRequest.phone,
+      address: newUserRequest.address
+    });
+
+    // create clinic record
+    await this.clinicRepository.create(clinic);
+
+    // create user credentials record
     await this.userRepository.userCredentials(savedUser.id).create({password});
 
     return savedUser;
