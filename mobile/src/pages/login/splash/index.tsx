@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { Item, Input, Icon, Button, Text } from 'native-base';
 import 'mobx-react-lite/batchingForReactNative';
-import { login } from '../../../actions/auth';
+import { login, goRegistion } from '../../../actions/auth';
 import { useStores } from '../../../stores';
 import { useNavigation } from '@react-navigation/native';
 import { ActionState } from '../../../models/common';
@@ -23,6 +23,10 @@ const SplashPage = observer(() => {
 
     const onLogin = () => {
         login({ email, password, stores, navigation });
+    }
+
+    const onRegistion = () => {
+        goRegistion({ navigation });
     }
 
     const isLoading = stores.userStore.loginState === ActionState.IN_PROGRESS;
@@ -62,6 +66,9 @@ const SplashPage = observer(() => {
                         <View>
                             <Button onPress={onLogin}>
                                 <Text>Login</Text>
+                            </Button>
+                            <Button onPress={onRegistion}>
+                                <Text>Register</Text>
                             </Button>
                         </View>
                     </View>

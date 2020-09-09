@@ -14,6 +14,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import SplashPage from './pages/login/splash';
 import HomePage from './pages/home';
+import RegisterPage from './pages/login/register';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,10 @@ const App = () => {
           options={{
             animationTypeForReplace: 'pop'
           }}
+        />
+        <Stack.Screen
+          name="Registion"
+          component={RegisterPage}
         />
         <Stack.Screen
           name="Home"

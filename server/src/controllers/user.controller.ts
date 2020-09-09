@@ -18,31 +18,27 @@ import _ from 'lodash';
 import { User, Response } from '../models';
 import { Clinic } from '../models/clinic.model';
 import { ClinicRepository, UserRepository } from '../repositories';
-import { UserService } from '../services/user.service';
+import { UserService, verifyNewUser } from '../services/user.service';
 
 @model()
 export class NewUserRequest extends User {
   @property({
     type: 'string',
-    required: true,
   })
   password: string;
 
   @property({
-    type: 'string',
-    required: true
+    type: 'string'
   })
   name: string;
 
   @property({
-    type: 'string',
-    required: true
+    type: 'string'
   })
   phone: string;
 
   @property({
-    type: 'string',
-    required: true
+    type: 'string'
   })
   address: string;
 }
@@ -179,6 +175,16 @@ export class UserController {
     })
     newUserRequest: NewUserRequest,
   ): Promise<Response> {
+    // validate new user data
+    const validate = verifyNewUser(newUserRequest);
+    console.log(validate);
+    if (!validate) {
+      return new Response({
+        code: 304,
+        message: 'Incorrect data'
+      });
+    }
+
     // encrypt password
     const password = await hash(newUserRequest.password, await genSalt());
 
@@ -188,7 +194,11 @@ export class UserController {
     );
 
     // create user credentials record
-    await this.userRepository.userCredentials(savedUser.id).create({ password });
+    const savedCredentials = await this.userRepository.userCredentials(savedUser.id).create({ password });
+
+    // generate token
+    const userProfile = this.userService.convertToUserProfile(savedUser);
+    const token = await this.jwtService.generateToken(userProfile);
 
     // create clinic information
     const clinic = new Clinic({
@@ -205,6 +215,7 @@ export class UserController {
       code: 200,
       payload: {
         user: savedUser,
+        token,
         clinic: _.assign({}, savedClinic, { email: savedUser.email })
       }
     });

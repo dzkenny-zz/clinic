@@ -7,6 +7,15 @@ export type LoginResp = {
     clinic: Clinic
 }
 
+export type RegisterType = {
+    email: string,
+    password: string,
+    password2: string,
+    name: string,
+    phone: string,
+    address: string
+}
+
 export async function login(email: string, password: string): Promise<LoginResp> {
     const payload = await request({
         url: `http://192.168.0.133:3000/login`,
@@ -14,6 +23,25 @@ export async function login(email: string, password: string): Promise<LoginResp>
         data: {
             email,
             password
+        }
+    });
+
+    return {
+        token: payload.token,
+        clinic: new Clinic(payload.clinic)
+    };
+}
+
+export async function register(clinic: Clinic) {
+    const payload = await request({
+        url: `http://192.168.0.133:3000/signup`,
+        method: 'post',
+        data: {
+            email: clinic.email,
+            password: clinic.password,
+            name: clinic.name,
+            phone: clinic.phone,
+            address: clinic.address
         }
     });
 

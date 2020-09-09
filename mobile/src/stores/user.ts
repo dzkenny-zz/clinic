@@ -12,6 +12,7 @@ export class UserStore {
     @observable
     clinic: Clinic = new Clinic();
 
+    // for login page
     @observable
     errorMsg: string = '';
 
