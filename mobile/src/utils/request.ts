@@ -1,8 +1,9 @@
 import Axios, { AxiosRequestConfig } from "axios";
 
 const instance = Axios.create({
-    baseURL: 'http://10.89.19.159:3000'
-})
+    baseURL: 'http://192.168.0.133:3000'
+    // baseURL: 'http://10.89.19.159:3000'
+});
 
 export async function request(config: AxiosRequestConfig): Promise<any> {
     const resp = await instance(config);

@@ -54,6 +54,11 @@ export class ConsultRecordRequest {
     type: 'boolean',
   })
   followUp: boolean;
+
+  @property({
+    type: 'string'
+  })
+  medication: string
 }
 
 export class ConsultRecordsController {
@@ -86,8 +91,19 @@ export class ConsultRecordsController {
     consultRecord: Omit<ConsultRecordRequest, 'id'>,
   ): Promise<Response> {
     try {
-      // create consult record
+      // convert request to consult record
       const record = this.consultRecordService.parseFromRequest(consultRecord, currentUserProfile.id);
+
+      // validate record first
+      const isValid = await this.consultRecordService.verifyNewRecord(record);
+      if (!isValid) {
+        return new Response({
+          code: 304,
+          message: 'Please verify the data first'
+        });
+      }
+
+      // insert record to database
       const savedConsultRecord = await this.consultRecordRepository.create(record);
 
       console.log(`success create consult record: ${savedConsultRecord.id}`);

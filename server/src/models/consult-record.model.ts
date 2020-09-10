@@ -50,6 +50,10 @@ export class ConsultRecord extends Entity {
   })
   followUp?: string;
 
+  @property({
+    type: 'string'
+  })
+  medication?: string
 
   constructor(data?: Partial<ConsultRecord>) {
     super(data);

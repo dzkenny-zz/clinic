@@ -23,7 +23,7 @@ const CustomCalendar = observer(() => {
     // find out the records in target month
     const { date } = stores.calendarStore;
     const { rows } = stores.recordStore;
-    const row = rows.find(row => row.month === date.getMonth());
+    const row = rows.find(row => row.month === date.getMonth() && row.year === date.getFullYear());
 
     // set dots if there are records in that date
     let markedDates: any = {};

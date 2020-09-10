@@ -14,6 +14,7 @@ import { useStores } from '../../../stores';
 import { useNavigation } from '@react-navigation/native';
 import { ActionState } from '../../../models/common';
 import { observer } from 'mobx-react';
+import TextInput from '../../../components/textInput';
 
 const SplashPage = observer(() => {
     const [email, setEmail] = useState('');
@@ -44,21 +45,8 @@ const SplashPage = observer(() => {
                             <Image style={styles.logo} source={require('../../../assets/images/logo.png')} />
                         </View>
                         <View>
-                            <Item>
-                                <Input 
-                                    placeholder='email' 
-                                    onChangeText={setEmail}
-                                    disabled={isLoading}
-                                />
-                            </Item>
-                            <Item>
-                                <Input 
-                                    placeholder="password" 
-                                    secureTextEntry={true}
-                                    onChangeText={setPassword}
-                                    disabled={isLoading}
-                                />
-                            </Item>
+                            <TextInput type={'email-address'} value={email} label="email" onChange={setEmail} disabled={isLoading} />
+                            <TextInput value={password} label="password" onChange={setPassword} disabled={isLoading} secureTextEntry={true} />
                             <View>
                                 <Text style={styles.errorMessage}>{ stores.userStore.errorMsg }</Text>
                             </View>
@@ -97,7 +85,7 @@ const styles = StyleSheet.create({
         maxWidth: '100%'
     },
     errorMessage: {
-        height: 24,
+        height: 12,
         color: '#ff3333'
     },
     buttonContainer: {

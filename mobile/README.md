@@ -29,3 +29,5 @@ https://mobx-react.js.org/
 https://reactnative.dev/docs/activityindicator
 3 - native-base
 https://docs.nativebase.io/
+4 - react-native-elements
+https://react-native-elements.github.io/react-native-elements/

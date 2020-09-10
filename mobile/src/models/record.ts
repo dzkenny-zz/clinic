@@ -9,6 +9,7 @@ export class Record {
     fee: number = 0;
     dateTime: Date = new Date();
     followUp: boolean = false;
+    medication: string = '';
 
     constructor(data?: Partial<Record>) {
         if (data) {
@@ -24,10 +25,23 @@ export class Record {
         this.fee = data?.fee || 0;
         this.dateTime = data?.dateTime || new Date();
         this.followUp = data?.followUp || false;
+        this.medication = data?.medication || '';
     }
 
     validate() {
         let error: any = {};
+
+        if (!this.doctor) {
+            error.doctor = 'Doctor name cannot be missing';
+        }
+
+        if (!this.patient) {
+            error.patient = 'Patient name cannot be missing';
+        }
+
+        if (!this.fee) {
+            error.fee = 'Fee cannot be 0 or empty'
+        }
         return error;
     }
 }

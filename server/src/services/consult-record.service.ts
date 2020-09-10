@@ -1,11 +1,15 @@
+import {UserRepository} from '@loopback/authentication-jwt';
 import {bind, /* inject, */ BindingScope} from '@loopback/core';
+import {repository} from '@loopback/repository';
 import moment from 'moment';
 import {ConsultRecordRequest} from '../controllers';
 import {ConsultRecord} from '../models';
 
 @bind({scope: BindingScope.TRANSIENT})
 export class ConsultRecordService {
-  constructor(/* Add @inject to inject parameters */) {}
+  constructor(
+    @repository(UserRepository) public userResponsity: UserRepository
+  ) {}
 
   /*
    * Add service methods here
@@ -18,7 +22,8 @@ export class ConsultRecordService {
       diagonsis: record.diagonsis || '',
       fee: record.fee,
       dateTime: new Date(record.dateTime).getTime(),
-      followUp: record.followUp === 'Y'
+      followUp: record.followUp === 'Y',
+      medication: record.medication || ''
     }
   }
 
@@ -33,5 +38,20 @@ export class ConsultRecordService {
       dateTime: moment(record.dateTime).format(),
       followUp: record.followUp ? 'Y' : 'N'
     });
+  }
+
+  async verifyNewRecord(record: ConsultRecord) {
+    const foundUser = await this.userResponsity.findById(record.clinicId);
+    if (!foundUser) {
+      throw new Error('Cannot found User');
+    }
+
+    if (!moment.isDate(record.dateTime)) {
+      return false;
+    }
+
+    if (!record.doctorName || !record.fee || !record.patientName) {
+      return false;
+    }
   }
 }

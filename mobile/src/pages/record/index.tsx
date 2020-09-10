@@ -50,6 +50,7 @@ const RecordPage = () => {
                     <Text>Doctor: {record.doctor}</Text>
                     <Text>Patient: {record.patient}</Text>
                     <Text>Diagonsis: {record.diagonsis}</Text>
+                    <Text>Medication: {record.medication}</Text>
                     <Text>Fee: {record.fee}</Text>
                     <Text>Date: {moment(record.dateTime).format('L')}</Text>
                     <Text>Time: {moment(record.dateTime).format('hh:ss')}</Text>

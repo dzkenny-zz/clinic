@@ -20,7 +20,7 @@ const RecordList = observer(() => {
     // find target date record
     const { date } = stores.calendarStore;
     const { rows } = stores.recordStore;
-    const row = rows.find(row => row.month === date.getMonth());
+    const row = rows.find(row => row.month === date.getMonth() && row.year === date.getFullYear());
 
     let records = row ? row.records.filter(record => moment(record.dateTime).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD')) : [];
 

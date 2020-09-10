@@ -18,6 +18,11 @@ export type InsertRecordsType = {
     records: Record[]
 }
 
+export type CreateRecordType = {
+    stores: Stores,
+    record: Record
+}
+
 export async function getRecords({ stores }: GetRecordsType): Promise<Record[]> {
     // get start date & end date
     const { type, date } = stores.calendarStore;
@@ -80,7 +85,7 @@ export function insertRecords({ stores, records }: InsertRecordsType) {
 
     // don't remove data for cache
     // find month record first
-    const row = rows.find(row => row.month === date.getMonth());
+    const row = rows.find(row => row.month === date.getMonth() && row.year === date.getFullYear());
 
     // no record find, just update record
     if (!row) {
@@ -110,4 +115,23 @@ export function insertRecords({ stores, records }: InsertRecordsType) {
     }
 
     return [];
+}
+
+export async function createRecord({ record, stores }: CreateRecordType) {
+    const payload = await request({
+        url: `/consult-records`,
+        method: 'post',
+        data: record,
+        headers: {
+            Authorization: `Bearer ${stores.userStore.token}`
+        }
+    });
+
+    if (!payload.value) {
+        throw new Error('No Record Created');
+    }
+
+    return {
+        record: new Record(payload.value)
+    };
 }

@@ -4,6 +4,7 @@ import { Record } from '../models/record';
 
 export type RecordRow = {
     month: number,
+    year: number,
     records: Record[]
 }
 
@@ -18,10 +19,11 @@ export class RecordStore {
     loadingState: ActionState = ActionState.INITIAL
 
     @action
-    setRecords = (month: number, records: Record[]) => {
-        const row = this.rows.find(row => row.month === month);
+    setRecords = (year: number, month: number, records: Record[]) => {
+        const row = this.rows.find(row => row.month === month && row.year === year);
         if (!row) {
             this.rows.push({
+                year,
                 month,
                 records
             });

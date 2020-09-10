@@ -22,12 +22,7 @@ type GoRegistionType = {
 }
 
 type RegisterType = {
-    email: string,
-    password: string,
-    password2: string,
-    phone: string,
-    name: string,
-    address: string,
+    clinic: Clinic
     stores: Stores,
     navigation: Navigation
 }
@@ -51,14 +46,12 @@ export async function login({ email, password, stores, navigation }: LoginType) 
 }
 
 export async function goRegistion({ navigation }: GoRegistionType) {
-    navigation.dispatch(StackActions.replace('Registion'));
+    navigation.dispatch(StackActions.push('Registion'));
 }
 
-export async function register({ password, password2, email, name, phone, address, stores, navigation }: RegisterType) {
+export async function register({ clinic, stores, navigation }: RegisterType) {
     try {
         stores.userStore.setLoginState(ActionState.IN_PROGRESS);
-
-        const clinic = new Clinic({ password, password2, email, name, phone, address });
         const errorObj = clinic.validate();
         if (_.size(errorObj)) {
             stores.userStore.setLoginState(ActionState.FAILURE);

@@ -6,14 +6,16 @@ import {
     StyleSheet,
     View
 } from 'react-native';
-import { Item, Input, Icon, Button, Text, Header, Right } from 'native-base';
+import { Item, Input, Icon, Button, Text, Header, Right, Left } from 'native-base';
 import 'mobx-react-lite/batchingForReactNative';
 import { login, register } from '../../../actions/auth';
 import { useStores } from '../../../stores';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, StackActions } from '@react-navigation/native';
 import { ActionState } from '../../../models/common';
 import { observer } from 'mobx-react';
 import * as _ from 'lodash';
+import { Clinic } from '../../../models/clinic';
+import TextInput from '../../../components/textInput';
 
 const RegisterPage = observer(() => {
     const stores = useStores();
@@ -58,10 +60,15 @@ const RegisterPage = observer(() => {
     }
 
     const onRegister = () => {
-        register({ email, password, password2, phone, name, address, stores, navigation })
+        const clinic = new Clinic({ password, password2, email, name, phone, address });
+        register({ clinic, stores, navigation })
         .then((error: any = {}) => {
             setErrorObj(error);
         });
+    }
+
+    const onCancel = () => {
+        navigation.dispatch(StackActions.pop(1));
     }
 
     const isLoading = stores.userStore.loginState === ActionState.IN_PROGRESS;
@@ -71,6 +78,11 @@ const RegisterPage = observer(() => {
             <StatusBar barStyle="dark-content" />
             <SafeAreaView>
                 <Header>
+                    <Left>
+                        <Button onPress={onCancel} transparent>
+                            <Text>Back</Text>
+                        </Button>
+                    </Left>
                     <Right>
                         <Button onPress={onRegister} transparent>
                             <Text>Register</Text>
@@ -78,80 +90,12 @@ const RegisterPage = observer(() => {
                     </Right>
                 </Header>
                 <View style={styles.loginContainer}>
-                    <Item error={!!errorObj.email}>
-                        <Input
-                            placeholder="Email"
-                            onChangeText={onEmailChange}
-                            disabled={isLoading}
-                        />
-                    </Item>
-                    <View>
-                        <Text style={styles.errorMessage}>
-                            {errorObj.email}
-                        </Text>
-                    </View>
-                    <Item error={!!errorObj.password}>
-                        <Input
-                            placeholder="Password"
-                            secureTextEntry={true}
-                            onChangeText={onPasswordChange}
-                            disabled={isLoading}
-                        />
-                    </Item>
-                    <View>
-                        <Text style={styles.errorMessage}>
-                            {errorObj.password}
-                        </Text>
-                    </View>
-                    <Item error={!!errorObj.password2}>
-                        <Input
-                            placeholder="Confirm Password"
-                            secureTextEntry={true}
-                            onChangeText={onPassword2Change}
-                            disabled={isLoading}
-                        />
-                    </Item>
-                    <View>
-                        <Text style={styles.errorMessage}>
-                            {errorObj.password2}
-                        </Text>
-                    </View>
-                    <Item error={!!errorObj.name}>
-                        <Input
-                            placeholder="Clinic Name"
-                            onChangeText={onNameChange}
-                            disabled={isLoading}
-                        />
-                    </Item>
-                    <View>
-                        <Text style={styles.errorMessage}>
-                            {errorObj.name}
-                        </Text>
-                    </View>
-                    <Item error={!!errorObj.phone}>
-                        <Input
-                            placeholder="Phone Number"
-                            onChangeText={onPhoneChange}
-                            disabled={isLoading}
-                        />
-                    </Item>
-                    <View>
-                        <Text style={styles.errorMessage}>
-                            {errorObj.phone}
-                        </Text>
-                    </View>
-                    <Item error={!!errorObj.address}>
-                        <Input
-                            placeholder="Address"
-                            onChangeText={onAddressChange}
-                            disabled={isLoading}
-                        />
-                    </Item>
-                    <View>
-                        <Text style={styles.errorMessage}>
-                            {errorObj.address}
-                        </Text>
-                    </View>
+                    <TextInput type={'email-address'} value={email} label="Email" onChange={onEmailChange} disabled={isLoading} error={errorObj.email} mandatory={true} />
+                    <TextInput value={password} label="Password" onChange={onPasswordChange} disabled={isLoading} error={errorObj.password} secureTextEntry={true} mandatory={true} />
+                    <TextInput value={password2} label="Re-Enter Password" onChange={onPassword2Change} disabled={isLoading} error={errorObj.password2} secureTextEntry={true} mandatory={true} />
+                    <TextInput value={name} label="Clinic Name" onChange={onNameChange} disabled={isLoading} error={errorObj.name} mandatory={true} />
+                    <TextInput value={phone} label="Phone Number" onChange={onPhoneChange} disabled={isLoading} error={errorObj.phone} mandatory={true} />
+                    <TextInput value={address} label="Address" onChange={onAddressChange} disabled={isLoading} error={errorObj.address} mandatory={true} />
                 </View>
             </SafeAreaView>
         </>
