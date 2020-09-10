@@ -11,3 +11,5 @@ export enum ActionState  {
     SUCCESS = 'SUCCESS',
     FAILURE = 'FAILURE'
 }
+
+export type CalendarType = 'DAY' | 'WEEK' | 'MONTH';

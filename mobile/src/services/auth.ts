@@ -1,4 +1,3 @@
-import Axios from "axios";
 import { Clinic } from "../models/clinic";
 import { request } from "../utils/request";
 
@@ -18,7 +17,7 @@ export type RegisterType = {
 
 export async function login(email: string, password: string): Promise<LoginResp> {
     const payload = await request({
-        url: `http://192.168.0.133:3000/login`,
+        url: `/login`,
         method: 'post',
         data: {
             email,
@@ -34,7 +33,7 @@ export async function login(email: string, password: string): Promise<LoginResp>
 
 export async function register(clinic: Clinic) {
     const payload = await request({
-        url: `http://192.168.0.133:3000/signup`,
+        url: `/signup`,
         method: 'post',
         data: {
             email: clinic.email,

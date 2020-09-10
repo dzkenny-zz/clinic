@@ -72,7 +72,7 @@ const RegisterPage = observer(() => {
             <SafeAreaView>
                 <Header>
                     <Right>
-                        <Button onPress={onRegister}>
+                        <Button onPress={onRegister} transparent>
                             <Text>Register</Text>
                         </Button>
                     </Right>

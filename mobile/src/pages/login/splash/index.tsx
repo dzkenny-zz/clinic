@@ -63,12 +63,12 @@ const SplashPage = observer(() => {
                                 <Text style={styles.errorMessage}>{ stores.userStore.errorMsg }</Text>
                             </View>
                         </View>
-                        <View>
-                            <Button onPress={onLogin}>
-                                <Text>Login</Text>
-                            </Button>
-                            <Button onPress={onRegistion}>
+                        <View style={styles.buttonContainer}>
+                            <Button onPress={onRegistion} disabled={isLoading} style={styles.button}>
                                 <Text>Register</Text>
+                            </Button>
+                            <Button onPress={onLogin} disabled={isLoading} style={styles.button}>
+                                <Text>Login</Text>
                             </Button>
                         </View>
                     </View>
@@ -99,6 +99,13 @@ const styles = StyleSheet.create({
     errorMessage: {
         height: 24,
         color: '#ff3333'
+    },
+    buttonContainer: {
+        flexDirection: 'row'
+    },
+    button: {
+        flex: 1,
+        marginHorizontal: 12
     }
 });
 

@@ -1,7 +1,11 @@
 import Axios, { AxiosRequestConfig } from "axios";
 
+const instance = Axios.create({
+    baseURL: 'http://10.89.19.159:3000'
+})
+
 export async function request(config: AxiosRequestConfig): Promise<any> {
-    const resp = await Axios(config);
+    const resp = await instance(config);
 
     if (resp && resp.data) {
         if ([200, 201].indexOf(resp.data.code) > -1) {

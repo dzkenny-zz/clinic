@@ -40,7 +40,7 @@ export class ConsultRecord extends Entity {
   fee: number;
 
   @property({
-    type: 'string',
+    type: 'date',
     required: true,
   })
   dateTime: string;

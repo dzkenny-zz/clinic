@@ -1,12 +1,10 @@
 import {authenticate} from '@loopback/authentication';
-import {inject} from '@loopback/core';
+import {inject, service} from '@loopback/core';
 import {
-  Count,
-  CountSchema,
-
-  FilterExcludingWhere,
-  repository,
-  Where
+  AnyObject,
+  model,
+  property,
+  repository
 } from '@loopback/repository';
 import {
   del, get,
@@ -15,13 +13,53 @@ import {
   requestBody
 } from '@loopback/rest';
 import {SecurityBindings, UserProfile} from '@loopback/security';
+import moment from 'moment';
 import {ConsultRecord, Response} from '../models';
 import {ConsultRecordRepository} from '../repositories';
+import {ConsultRecordService} from '../services';
+
+@model()
+export class ConsultRecordRequest {
+  @property({
+    type: 'string'
+  })
+  id?: string;
+
+  @property({
+    type: 'string'
+  })
+  doctor: string;
+
+  @property({
+    type: 'string'
+  })
+  patient: string;
+
+  @property({
+    type: 'string',
+  })
+  diagonsis?: string;
+
+  @property({
+    type: 'number'
+  })
+  fee: number;
+
+  @property({
+    type: 'any'
+  })
+  dateTime: any;
+
+  @property({
+    type: 'boolean',
+  })
+  followUp: boolean;
+}
 
 export class ConsultRecordsController {
   constructor(
-    @repository(ConsultRecordRepository)
-    public consultRecordRepository: ConsultRecordRepository,
+    @repository(ConsultRecordRepository) public consultRecordRepository: ConsultRecordRepository,
+    @service() public consultRecordService: ConsultRecordService,
   ) {}
 
   @authenticate('jwt')
@@ -38,19 +76,19 @@ export class ConsultRecordsController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(ConsultRecord, {
+          schema: getModelSchemaRef(ConsultRecordRequest, {
             title: 'NewConsultRecord',
-            exclude: ['id', 'clinicId'],
+            exclude: ['id'],
           }),
         },
       },
     })
-    consultRecord: Omit<ConsultRecord, 'id'>,
+    consultRecord: Omit<ConsultRecordRequest, 'id'>,
   ): Promise<Response> {
     try {
       // create consult record
-      consultRecord.clinicId = currentUserProfile.id;
-      const savedConsultRecord = await this.consultRecordRepository.create(consultRecord);
+      const record = this.consultRecordService.parseFromRequest(consultRecord, currentUserProfile.id);
+      const savedConsultRecord = await this.consultRecordRepository.create(record);
 
       console.log(`success create consult record: ${savedConsultRecord.id}`);
       return new Response({
@@ -59,14 +97,14 @@ export class ConsultRecordsController {
           id: savedConsultRecord.id
         }
       });
-    } catch(error) {
+    } catch (error) {
       console.error(`cannot create consult record: ${error.message}`);
       return new Response({
         code: 304,
         message: 'cannot create consult record'
       });
     }
-    
+
   }
 
   @authenticate('jwt')
@@ -78,7 +116,7 @@ export class ConsultRecordsController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(ConsultRecord, {includeRelations: true}),
+              items: getModelSchemaRef(ConsultRecordRequest, {includeRelations: true}),
             },
           },
         },
@@ -86,20 +124,25 @@ export class ConsultRecordsController {
     },
   })
   async find(
+    @param.query.date('startDate') startDate: Date,
+    @param.query.date('endDate') endDate: Date,
     @inject(SecurityBindings.USER) currentUserProfile: UserProfile,
   ): Promise<Response> {
     try {
       // get consult records by id
-      const consultRecords: ConsultRecord[] = await this.consultRecordRepository.find({
-        where: {clinicId: currentUserProfile.id}
-      });
+      const consultRecords: AnyObject = await this.consultRecordRepository.execute(
+        `select id, doctorName, patientName, dateTime from [dbo].[ConsultRecord] where clinicId = '${currentUserProfile.id}' and dateTime BETWEEN {ts '${moment(startDate).format('YYYY-MM-DD')} 00:00:00'} AND {ts '${moment(endDate).format('YYYY-MM-DD')} 23:59:59'}`
+      )
+
+      const records: ConsultRecordRequest[] = consultRecords.map(this.consultRecordService.convertToRequest);
+
       return new Response({
         code: 200,
         payload: {
-          values: consultRecords
+          values: records
         }
       })
-    } catch(error) {
+    } catch (error) {
       console.error(`cannot get consult records: ${error.message}`);
       return new Response({
         code: 500,
@@ -115,7 +158,7 @@ export class ConsultRecordsController {
         description: 'ConsultRecord model instance',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(ConsultRecord, {includeRelations: true}),
+            schema: getModelSchemaRef(ConsultRecordRequest, {includeRelations: true}),
           },
         },
       },
@@ -127,20 +170,21 @@ export class ConsultRecordsController {
   ): Promise<Response> {
     try {
       const consultRecord = await this.consultRecordRepository.findById(id);
+      const record = this.consultRecordService.convertToRequest(consultRecord);
       return new Response({
         code: 200,
         payload: {
-          value: consultRecord
+          value: record
         }
       })
-    } catch(error) {
+    } catch (error) {
       console.error(`cannot found consult record: ${error.message}`);
       return new Response({
         code: 500,
         message: 'Cannot found relative consult record'
       });
     }
-    
+
   }
 
   @authenticate('jwt')
@@ -154,14 +198,15 @@ export class ConsultRecordsController {
   async replaceById(
     @inject(SecurityBindings.USER) currentUserProfile: UserProfile,
     @param.path.string('id') id: string,
-    @requestBody() consultRecord: ConsultRecord,
+    @requestBody() consultRecord: ConsultRecordRequest,
   ): Promise<Response> {
-    try{
-      await this.consultRecordRepository.replaceById(id, consultRecord);
+    try {
+      const record = this.consultRecordService.parseFromRequest(consultRecord, currentUserProfile.id);
+      await this.consultRecordRepository.replaceById(id, record);
       return new Response({
         code: 204
       });
-    } catch(error) {
+    } catch (error) {
       console.error(`Cannot update consult record: ${error.message}`);
       return new Response({
         code: 304,
@@ -182,12 +227,12 @@ export class ConsultRecordsController {
     @inject(SecurityBindings.USER) currentUserProfile: UserProfile,
     @param.path.string('id') id: string
   ): Promise<Response> {
-    try{
+    try {
       await this.consultRecordRepository.deleteById(id);
       return new Response({
         code: 204
       });
-    } catch(error) {
+    } catch (error) {
       console.error(`Cannot delete consult record: ${error.message}`);
       return new Response({
         code: 304,
