@@ -42,7 +42,7 @@ Install the dependencies and devDependencies and start the backend server.
 ```bash
 $ cd server
 $ npm install
-$ node start
+$ npm start
 ```
 
 Install the depencies and start the metro server
