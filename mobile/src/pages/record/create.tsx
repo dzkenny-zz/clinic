@@ -117,14 +117,67 @@ const RecordCreatePage = () => {
             <Content>
                 <View><Text style={styles.errorMessage}>{ stores.recordStore.errorMsg }</Text></View>
                 <View style={styles.padding}>
-                    <TextInput value={doctor} label="Doctor" disabled={isLoading} mandatory={true} onChange={onDoctorChange}/>
-                    <TextInput value={patient} label="Patient" disabled={isLoading} mandatory={true} onChange={onPatientChange}/>
-                    <TextInput value={diagonsis} label="Diagonsis" disabled={isLoading} onChange={onDiagonsisChange}/>
-                    <TextInput value={medication} label="medication" disabled={isLoading} onChange={onMedicationChange}/>
-                    <DatePicker value={dateTime} type="date" label="Date" disabled={isLoading} onChange={onDateTimeChange} />
-                    <DatePicker value={dateTime} type="time" label="Time" disabled={isLoading} onChange={onDateTimeChange} />
-                    <NumberInput value={fee} type="decimal" label="Fee" disabled={isLoading} onChange={onFeeChange} />
-                    <CheckBox value={followUp} label="FollowUp" disabled={isLoading} onChange={onFollowUpChange} />
+                    <TextInput 
+                        icon={{ type: 'MaterialCommunityIcons', name: 'doctor'}}
+                        value={doctor} 
+                        label="Doctor" 
+                        disabled={isLoading} 
+                        mandatory={true} 
+                        onChange={onDoctorChange}
+                    />
+                    <TextInput 
+                        icon={{ type: 'MaterialIcons', name: 'doctor'}}
+                        value={patient} 
+                        label="Patient" 
+                        disabled={isLoading} 
+                        mandatory={true} 
+                        onChange={onPatientChange}
+                    />
+                    <TextInput 
+                        icon={{ type: 'FontAwesome5', name: 'notes-medical'}}
+                        value={diagonsis} 
+                        label="Diagonsis" 
+                        disabled={isLoading} 
+                        onChange={onDiagonsisChange}
+                    />
+                    <TextInput 
+                        icon={{ type: 'FontAwesome5', name: 'pills'}}
+                        value={medication} 
+                        label="medication" 
+                        disabled={isLoading} 
+                        onChange={onMedicationChange}
+                    />
+                    <DatePicker 
+                        icon={{ type: 'AntDesign', name: 'calendar' }}
+                        value={dateTime} 
+                        type="date" 
+                        label="Date" 
+                        disabled={isLoading} 
+                        onChange={onDateTimeChange} 
+                    />
+                    <DatePicker 
+                        icon={{ type: 'MaterialCommunityIcons', name: 'clock-time-four-outline' }}
+                        value={dateTime} 
+                        type="time" 
+                        label="Time" 
+                        disabled={isLoading} 
+                        onChange={onDateTimeChange} 
+                    />
+                    <NumberInput 
+                        icon={{ type: 'FontAwesome', name: 'money' }}
+                        value={fee} 
+                        type="decimal" 
+                        label="Fee" 
+                        disabled={isLoading} 
+                        onChange={onFeeChange} 
+                    />
+                    <CheckBox 
+                        icon={{ type: 'MaterialCommunityIcons', name: 'notebook-outline' }}
+                        value={followUp} 
+                        label="FollowUp" 
+                        disabled={isLoading} 
+                        onChange={onFollowUpChange} 
+                    />
                 </View>
                 {
                     isLoading ? <Spinner /> : null

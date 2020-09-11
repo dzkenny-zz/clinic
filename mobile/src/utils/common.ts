@@ -29,3 +29,7 @@ export function getLastMonthDate(date: Date): Moment {
     const month = date.getMonth();
     return moment(`${year}-${month + 1}-1`, 'YYYY-M-D').add(1, 'months').subtract(1, 'days');
 }
+
+export function isSameDate(date1: Date, date2: Date): boolean {
+    return moment(date1).format('YYYY-MM-DD') === moment(date2).format('YYYY-MM-DD');
+}

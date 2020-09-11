@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Right, Container, Header, Content, Body, Spinner, Button, Text } from 'native-base';
 import { ButtonGroup } from 'react-native-elements';
-import Calendar from './calendar';
+import MonthCalendar from './monthCalendar';
+import WeekCalendar from './weekCalendar';
 import { useStores } from '../../stores';
 import { ActionState } from '../../models/common';
 import RecordList from './list';
@@ -43,9 +44,9 @@ const MainPage = () => {
 
                 {
                     index === 2 ?
-                        <Calendar /> :
+                        <MonthCalendar /> :
                         index === 1 ?
-                            <Calendar /> :
+                            <WeekCalendar /> :
                                 <DatePicker />
                 }
                 <RecordList />

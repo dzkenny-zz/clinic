@@ -73,5 +73,8 @@ export async function register({ clinic, stores, navigation }: RegisterType) {
 }
 
 export async function logout({ stores, navigation }: LogoutType) {
+    stores.calendarStore.init();
+    stores.recordStore.init();
+    stores.userStore.init();
     navigation.dispatch(StackActions.replace('Login'));
 }

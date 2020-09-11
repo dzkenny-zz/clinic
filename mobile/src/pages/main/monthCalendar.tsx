@@ -8,7 +8,7 @@ import moment from 'moment';
 import { changeDate } from '../../actions/calendar';
 import { ActionState } from '../../models/common';
 
-const CustomCalendar = observer(() => {
+const MonthCalendar = observer(() => {
     const stores = useStores();
     const [inited, setInited] = useState(false);
     useEffect(() => {
@@ -65,4 +65,4 @@ const CustomCalendar = observer(() => {
     )
 })
 
-export default CustomCalendar;
+export default MonthCalendar;

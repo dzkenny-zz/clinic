@@ -90,12 +90,62 @@ const RegisterPage = observer(() => {
                     </Right>
                 </Header>
                 <View style={styles.loginContainer}>
-                    <TextInput type={'email-address'} value={email} label="Email" onChange={onEmailChange} disabled={isLoading} error={errorObj.email} mandatory={true} />
-                    <TextInput value={password} label="Password" onChange={onPasswordChange} disabled={isLoading} error={errorObj.password} secureTextEntry={true} mandatory={true} />
-                    <TextInput value={password2} label="Re-Enter Password" onChange={onPassword2Change} disabled={isLoading} error={errorObj.password2} secureTextEntry={true} mandatory={true} />
-                    <TextInput value={name} label="Clinic Name" onChange={onNameChange} disabled={isLoading} error={errorObj.name} mandatory={true} />
-                    <TextInput value={phone} label="Phone Number" onChange={onPhoneChange} disabled={isLoading} error={errorObj.phone} mandatory={true} />
-                    <TextInput value={address} label="Address" onChange={onAddressChange} disabled={isLoading} error={errorObj.address} mandatory={true} />
+                    <TextInput 
+                        icon={{ type: 'Ionicons', name: 'person' }} 
+                        type={'email-address'} 
+                        value={email} label="Email" 
+                        onChange={onEmailChange} 
+                        disabled={isLoading} 
+                        error={errorObj.email} 
+                        mandatory={true} 
+                    />
+                    <TextInput 
+                        icon={{ type: 'MaterialCommunityIcons', name: 'form-textbox-password' }} 
+                        value={password} 
+                        label="Password" 
+                        onChange={onPasswordChange} 
+                        disabled={isLoading} 
+                        error={errorObj.password} 
+                        secureTextEntry={true} 
+                        mandatory={true} 
+                    />
+                    <TextInput 
+                        icon={{ type: 'MaterialCommunityIcons', name: 'form-textbox-password' }} 
+                        value={password2} 
+                        label="Re-Enter Password" 
+                        onChange={onPassword2Change} 
+                        disabled={isLoading} 
+                        error={errorObj.password2} 
+                        secureTextEntry={true} 
+                        mandatory={true} 
+                    />
+                    <TextInput 
+                        icon={{ type: 'MaterialCommunityIcons', name: 'home' }}
+                        value={name} 
+                        label="Clinic Name" 
+                        onChange={onNameChange} 
+                        disabled={isLoading} 
+                        error={errorObj.name} 
+                        mandatory={true} 
+                    />
+                    <TextInput 
+                        icon={{ type: 'Entypo', name: 'phone' }}
+                        value={phone} 
+                        label="Phone Number" 
+                        onChange={onPhoneChange} 
+                        disabled={isLoading} 
+                        error={errorObj.phone} 
+                        mandatory={true} 
+                    />
+                    <TextInput 
+                        icon={{ type: 'Entypo', name: 'address' }}
+                        value={address} 
+                        label="Address" 
+                        onChange={onAddressChange} 
+                        disabled={isLoading} 
+                        error={errorObj.address} 
+                        mandatory={true} 
+                    />
                 </View>
             </SafeAreaView>
         </>

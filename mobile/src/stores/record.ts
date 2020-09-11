@@ -50,6 +50,14 @@ export class RecordStore {
     setErrorMessage = (message: string) => {
         this.errorMsg = message;
     }
+
+    @action
+    init = () => {
+        this.rows = [];
+        this.record = new Record();
+        this.loadingState = ActionState.INITIAL;
+        this.errorMsg = '';
+    }
 }
 
 export default RecordStore;

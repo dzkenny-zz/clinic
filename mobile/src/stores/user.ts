@@ -35,6 +35,14 @@ export class UserStore {
     setErrorMessage = (errorMsg: string = '') => {
         this.errorMsg = errorMsg;
     }
+
+    @action
+    init = () => {
+        this.loginState = ActionState.INITIAL;
+        this.token = '';
+        this.clinic = new Clinic();
+        this.errorMsg = '';
+    }
 }
 
 export default UserStore;

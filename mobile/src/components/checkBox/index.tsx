@@ -1,12 +1,14 @@
 import React from 'react';
-import { Item, Label, Text, Input, ListItem, CheckBox as NativeCheckBox, Body } from 'native-base';
-import { StyleSheet } from 'react-native';
-import { GestureHandlerGestureEvent } from 'react-native-gesture-handler';
+import { Text, ListItem, CheckBox as NativeCheckBox, Body, Icon } from 'native-base';
+import { StyleSheet, View } from 'react-native';
 
 export type CheckBoxProp = {
     label: string,
     onChange: (value: boolean) => void,
-    icon?: string,
+    icon?: {
+        type: "AntDesign" | "Entypo" | "EvilIcons" | "Feather" | "FontAwesome" | "FontAwesome5" | "Foundation" | "Ionicons" | "MaterialCommunityIcons" | "MaterialIcons" | "Octicons" | "SimpleLineIcons" | "Zocial" | undefined,
+        name: string
+    },
     error?: string,
     disabled?: boolean,
     value: boolean
@@ -16,11 +18,14 @@ const CheckBox = ({ value = false, label, onChange, icon, error, disabled }: Che
     const onCheckBoxChange = () => {
         onChange(!value);
     }
-    
+
     return (
         <>
             <ListItem>
-                <NativeCheckBox disabled={disabled} checked={value} onPress={onCheckBoxChange}/>
+                {
+                    icon ? <Icon type={icon.type} name={icon.name} /> : <> </>
+                }
+                <NativeCheckBox disabled={disabled} checked={value} onPress={onCheckBoxChange} />
                 <Body>
                     <Text>{label}</Text>
                 </Body>

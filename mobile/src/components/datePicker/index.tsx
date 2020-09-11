@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Footer, Item, Label, ListItem, Right, Text } from 'native-base';
+import { Button, Icon, ListItem, Right, Text } from 'native-base';
 import { Platform, StyleSheet, View } from 'react-native';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
@@ -9,7 +9,10 @@ export type DatePickerProp = {
     mandatory?: boolean,
     label: string,
     onChange: (value: Date) => void,
-    icon?: string,
+    icon?: {
+        type: "AntDesign" | "Entypo" | "EvilIcons" | "Feather" | "FontAwesome" | "FontAwesome5" | "Foundation" | "Ionicons" | "MaterialCommunityIcons" | "MaterialIcons" | "Octicons" | "SimpleLineIcons" | "Zocial" | undefined,
+        name: string
+    },
     error?: string,
     disabled?: boolean,
     value: Date,
@@ -39,10 +42,15 @@ const DatePicker = ({ value = new Date(), type = 'date', mandatory, label, onCha
     }
 
     return (
-        <>
-            <ListItem onPress={showPicker}>
-                <Text>{label}</Text>
-                <Text>{type === 'date' ? moment(value).format('YYYY-MM-DD') : moment(value).format('hh:mm')}</Text>
+        <View style={styles.container}>
+            <ListItem onPress={showPicker} style={styles.listItem}>
+                {
+                    icon ? <View style={styles.leftIcon}><Icon type={icon.type} name={icon.name} /></View> : <> </>
+                }
+                <View style={styles.body}>
+                    <Text>{label}</Text>
+                    <Text>{type === 'date' ? moment(value).format('YYYY-MM-DD') : moment(value).format('hh:mm')}</Text>
+                </View>
             </ListItem>
             <Overlay isVisible={show} overlayStyle={styles.overlay}>
                 <>
@@ -59,16 +67,30 @@ const DatePicker = ({ value = new Date(), type = 'date', mandatory, label, onCha
                     </View>
                 </>
             </Overlay>
-        </>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
+    container: {
+        paddingBottom: 12
+    },
     overlay: {
         height: 'auto'
     },
     right: {
         alignSelf: 'flex-end',
+        flexDirection: 'row'
+    },
+    listItem: {
+        margin: 0,
+        padding: 0
+    },
+    leftIcon: {
+        width: 24
+    },
+    body: {
+        flex: 1,
         flexDirection: 'row'
     }
 });

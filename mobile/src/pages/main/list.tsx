@@ -41,7 +41,7 @@ const RecordList = observer(() => {
                 {
                     records.map((record) => (
                         <ListItem 
-                            key={`record-record.id`} 
+                            key={`record-${record.id}`} 
                             onPress={() => {
                                 goRecord({ stores, navigation, record});
                             }}

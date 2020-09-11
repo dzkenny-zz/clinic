@@ -1,12 +1,17 @@
 import React from 'react';
 import { StatusBar, SafeAreaView, StyleSheet, Image, Text } from 'react-native';
-import { Icon, View, Button, List, ListItem, Left, Body } from 'native-base';
+import { Icon, View, Button } from 'native-base';
 import { useStores } from '../../stores';
 import { useNavigation } from '@react-navigation/core';
+import { logout } from '../../actions/auth';
 
 const SideMenu = ({ progress, ...rest }: any) => {
     const stores = useStores();
     const navigation = useNavigation();
+
+    const onLogout = () => {
+        logout({ stores, navigation });
+    }
 
     return (
         <>
@@ -14,35 +19,21 @@ const SideMenu = ({ progress, ...rest }: any) => {
             <SafeAreaView style={styles.container}>
                 <View style={styles.header}>
                     <View style={styles.headerRow}>
-                        <View style={styles.personIcon}>
-                            <View style={{ width: 64, height: 64, borderRadius: 32, borderColor: 'grey', borderWidth: 1, borderStyle: 'solid', justifyContent: 'center', alignItems: 'center' }}>
-                                <Icon name='person' style={{ fontSize: 48 , color: 'grey' }}/>
-                            </View>
-                        </View>
                         <Image style={styles.companyLogo} source={require('../../assets/images/logo.png')} />
                     </View>
                     <View style={styles.headerRow}>
-                        <Text>Agent Name</Text>
+                        <Text>{ stores.userStore.clinic.name }</Text>
                     </View>
                     <View style={styles.headerRow}>
-                        <Text>Agent Email</Text>
+                        <Text>{ stores.userStore.clinic.email }</Text>
                     </View>
                 </View>
                 <View style={styles.content}>
-                    <List>
-                        <ListItem onPress={() => { }}>
-                            <Left>
-                                <Icon type="FontAwesome" name="users" />
-                            </Left>
-                            <Body>
-                            </Body>
-                        </ListItem>
-                    </List>
                 </View>
                 <View style={styles.footer}>
                     <View style={styles.buttons}>
-                    <Button transparent small style={styles.iconButton}>
-                        <Icon type='FontAwesome' name="power-off" />
+                    <Button transparent small style={styles.iconButton} onPress={onLogout}>
+                        <Icon type='AntDesign' name="logout" />
                     </Button>
                     </View>
                 </View>

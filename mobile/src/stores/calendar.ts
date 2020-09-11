@@ -25,6 +25,13 @@ export class CalendarStore {
     setDate = (date: Date) => {
         this.date = date;
     }
+
+    @action
+    init = () => {
+        this.type = 'MONTH';
+        this.date = new Date();
+        this.loadingState = ActionState.INITIAL;
+    }
 }
 
 export default CalendarStore;

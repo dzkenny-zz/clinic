@@ -7,7 +7,7 @@ import {
     View,
     Image
 } from 'react-native';
-import { Item, Input, Icon, Button, Text } from 'native-base';
+import { Item, Input, Icon, Button, Text, Spinner } from 'native-base';
 import 'mobx-react-lite/batchingForReactNative';
 import { login, goRegistion } from '../../../actions/auth';
 import { useStores } from '../../../stores';
@@ -45,8 +45,22 @@ const SplashPage = observer(() => {
                             <Image style={styles.logo} source={require('../../../assets/images/logo.png')} />
                         </View>
                         <View>
-                            <TextInput type={'email-address'} value={email} label="email" onChange={setEmail} disabled={isLoading} />
-                            <TextInput value={password} label="password" onChange={setPassword} disabled={isLoading} secureTextEntry={true} />
+                            <TextInput 
+                                icon={{ type: 'Ionicons', name: 'person' }} 
+                                type={'email-address'} 
+                                value={email} 
+                                label="email" 
+                                onChange={setEmail} 
+                                disabled={isLoading} 
+                            />
+                            <TextInput 
+                                icon={{ type: 'MaterialCommunityIcons', name: 'form-textbox-password' }} 
+                                value={password} 
+                                label="password" 
+                                onChange={setPassword} 
+                                disabled={isLoading} 
+                                secureTextEntry={true} 
+                            />
                             <View>
                                 <Text style={styles.errorMessage}>{ stores.userStore.errorMsg }</Text>
                             </View>
@@ -59,6 +73,9 @@ const SplashPage = observer(() => {
                                 <Text>Login</Text>
                             </Button>
                         </View>
+                        {
+                            isLoading ? <Spinner /> : null 
+                        }
                     </View>
                 </ScrollView>
             </SafeAreaView>
@@ -85,7 +102,8 @@ const styles = StyleSheet.create({
         maxWidth: '100%'
     },
     errorMessage: {
-        height: 12,
+        height: 16,
+        fontSize: 12,
         color: '#ff3333'
     },
     buttonContainer: {
