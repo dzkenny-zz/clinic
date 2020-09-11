@@ -118,20 +118,23 @@ export function insertRecords({ stores, records }: InsertRecordsType) {
 }
 
 export async function createRecord({ record, stores }: CreateRecordType) {
+
+    console.log(JSON.stringify(record));
+    console.log(stores.userStore.token);
     const payload = await request({
         url: `/consult-records`,
         method: 'post',
-        data: record,
+        data: _.omit(record, 'id'),
         headers: {
             Authorization: `Bearer ${stores.userStore.token}`
         }
     });
 
-    if (!payload.value) {
+    if (!payload.id) {
         throw new Error('No Record Created');
     }
 
-    return {
-        record: new Record(payload.value)
-    };
+    record.id = payload.id;
+
+    return { record };
 }

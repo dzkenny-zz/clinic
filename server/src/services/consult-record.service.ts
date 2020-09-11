@@ -4,6 +4,7 @@ import {repository} from '@loopback/repository';
 import moment from 'moment';
 import {ConsultRecordRequest} from '../controllers';
 import {ConsultRecord} from '../models';
+import {validateDate} from './validate.service';
 
 @bind({scope: BindingScope.TRANSIENT})
 export class ConsultRecordService {
@@ -46,12 +47,14 @@ export class ConsultRecordService {
       throw new Error('Cannot found User');
     }
 
-    if (!moment.isDate(record.dateTime)) {
+    if (!validateDate(new Date(record.dateTime))) {
       return false;
     }
 
     if (!record.doctorName || !record.fee || !record.patientName) {
       return false;
     }
+
+    return true;
   }
 }

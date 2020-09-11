@@ -4,6 +4,7 @@ import { Navigation, ActionState } from "../models/common";
 import * as _ from 'lodash';
 import { Record } from "../models/record";
 import { DrawerActions } from "@react-navigation/native";
+import { Toast } from "native-base";
 
 export type GetRecordsType = {
     stores: Stores
@@ -62,11 +63,13 @@ export async function getRecord({ stores }: GetRecordType) {
 
 export async function goRecord({ stores, navigation, record }: GoRecordType) {
     stores.recordStore.setRecord(record);
+    getRecord({ stores });
     navigation.dispatch(DrawerActions.jumpTo('Record'));
 }
 
 export async function clearRecord({ stores }: ClearRecordType) {
     stores.recordStore.setRecord(new Record());
+    stores.recordStore.setErrorMessage('');
 }
 
 export async function createRecord({ record, stores, navigation }: CreateRecordType) {
@@ -86,12 +89,12 @@ export async function createRecord({ record, stores, navigation }: CreateRecordT
         const createMonth = record.dateTime.getMonth();
         const { rows } = stores.recordStore;
         const row = rows.find(row => row.month === createMonth && row.year === createYear);
-        stores.recordStore.setRecords(createYear, createMonth, _.concat(row ? row.records : [], [record]));
+        stores.recordStore.setRecords(createYear, createMonth, _.concat(row ? row.records : [], [savedRecord]));
         navigation.goBack();
-        stores.userStore.setLoginState(ActionState.SUCCESS);
+        stores.recordStore.setLoadingState(ActionState.SUCCESS);
     } catch(error) {
         console.log(error);
-        stores.userStore.setErrorMessage(error.message);
-        stores.userStore.setLoginState(ActionState.FAILURE);
+        stores.recordStore.setErrorMessage(error.message);
+        stores.recordStore.setLoadingState(ActionState.FAILURE);
     }
 }

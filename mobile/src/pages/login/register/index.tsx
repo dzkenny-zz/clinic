@@ -62,9 +62,9 @@ const RegisterPage = observer(() => {
     const onRegister = () => {
         const clinic = new Clinic({ password, password2, email, name, phone, address });
         register({ clinic, stores, navigation })
-        .then((error: any = {}) => {
-            setErrorObj(error);
-        });
+            .then((error: any = {}) => {
+                setErrorObj(error);
+            });
     }
 
     const onCancel = () => {
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     },
     errorMessage: {
         height: 16,
-        fontSize: 12, 
+        fontSize: 12,
         color: '#ff3333'
     }
 });

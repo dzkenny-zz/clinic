@@ -16,7 +16,10 @@ export class RecordStore {
     record: Record = new Record();
 
     @observable
-    loadingState: ActionState = ActionState.INITIAL
+    loadingState: ActionState = ActionState.INITIAL;
+
+    @observable
+    errorMsg: string = '';
 
     @action
     setRecords = (year: number, month: number, records: Record[]) => {
@@ -41,6 +44,11 @@ export class RecordStore {
     @action
     setLoadingState = (state: ActionState) => {
         this.loadingState = state;
+    }
+
+    @action
+    setErrorMessage = (message: string) => {
+        this.errorMsg = message;
     }
 }
 

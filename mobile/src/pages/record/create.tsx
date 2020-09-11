@@ -8,6 +8,10 @@ import TextInput from '../../components/textInput';
 import * as _ from 'lodash';
 import NumberInput from '../../components/numberInput';
 import CheckBox from '../../components/checkBox';
+import DatePicker from '../../components/datePicker';
+import { StyleSheet } from 'react-native';
+import { createRecord } from '../../actions/records';
+import { Record } from '../../models/record';
 
 const RecordCreatePage = () => {
     const navigation = useNavigation();
@@ -33,8 +37,9 @@ const RecordCreatePage = () => {
     }
 
     const onDateTimeChange = (value: Date) => {
+        console.log(value);
         setErrorObj(_.omit(errorObj, 'dateTime'));
-        setDateTime(dateTime);
+        setDateTime(value);
     }
 
     const onDiagonsisChange = (value: string) => {
@@ -73,13 +78,30 @@ const RecordCreatePage = () => {
         setErrorObj({});
     }
 
+    const onCreate = () => {
+        const record = new Record({
+            doctor,
+            patient,
+            dateTime,
+            diagonsis,
+            medication,
+            fee,
+            followUp
+        });
+
+        createRecord({ record, stores, navigation })
+            .then((errorObj) => {
+                setErrorObj(errorObj);
+            });
+    }
+
     const isLoading = stores.recordStore.loadingState === ActionState.IN_PROGRESS;
 
     return (
         <Container>
             <Header>
                 <Left>
-                    <Button transparent onPress={onBack}>
+                    <Button transparent onPress={onBack} disabled={isLoading}>
                         <Text>Back</Text>
                     </Button>
                 </Left>
@@ -87,14 +109,20 @@ const RecordCreatePage = () => {
                     <Text>Record</Text>
                 </Body>
                 <Right>
+                    <Button transparent onPress={onCreate} disabled={isLoading}>
+                        <Text>Create</Text>
+                    </Button>
                 </Right>
             </Header>
             <Content>
-                <View>
+                <View><Text style={styles.errorMessage}>{ stores.recordStore.errorMsg }</Text></View>
+                <View style={styles.padding}>
                     <TextInput value={doctor} label="Doctor" disabled={isLoading} mandatory={true} onChange={onDoctorChange}/>
                     <TextInput value={patient} label="Patient" disabled={isLoading} mandatory={true} onChange={onPatientChange}/>
                     <TextInput value={diagonsis} label="Diagonsis" disabled={isLoading} onChange={onDiagonsisChange}/>
                     <TextInput value={medication} label="medication" disabled={isLoading} onChange={onMedicationChange}/>
+                    <DatePicker value={dateTime} type="date" label="Date" disabled={isLoading} onChange={onDateTimeChange} />
+                    <DatePicker value={dateTime} type="time" label="Time" disabled={isLoading} onChange={onDateTimeChange} />
                     <NumberInput value={fee} type="decimal" label="Fee" disabled={isLoading} onChange={onFeeChange} />
                     <CheckBox value={followUp} label="FollowUp" disabled={isLoading} onChange={onFollowUpChange} />
                 </View>
@@ -105,5 +133,17 @@ const RecordCreatePage = () => {
         </Container>
     )
 }
+
+const styles = StyleSheet.create({
+    padding: {
+        padding: 12
+    },
+    errorMessage: {
+        height: 16,
+        fontSize: 12,
+        color: '#ff3333',
+        textAlign: 'center'
+    }
+})
 
 export default RecordCreatePage;

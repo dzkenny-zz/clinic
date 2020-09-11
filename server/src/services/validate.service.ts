@@ -7,3 +7,7 @@ export function validatePhone(phone: string) {
     const re = /^[0-9]{8}$/;
     return re.test(phone);
 }
+
+export function validateDate(date: Date) {
+    return !isNaN(date.getTime());
+}
