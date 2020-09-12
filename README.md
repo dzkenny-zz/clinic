@@ -7,8 +7,20 @@ Before starting, please ensure you have install the library first, for more deta
  - cocoapods (For IOS) - https://cocoapods.org/
  - Xcode (For IOS)
  - Android Studio (For Android)
- - yarn (https://yarnpkg.com/)
+ - yarn - (https://yarnpkg.com/)
+ - react-native - (https://reactnative.dev/)
+ - postman (Server Api Testing) - (https://learning.postman.com/)
 
+ In my case, I use react-native cli instead of expo cli.
+ Also I use loopback (https://loopback.io/) which is build on express.server.
+ 
+ #Installation Guideline
+ 
+ Clone project from git
+ ```sh
+ $ git clone https://github.com/dzkenny/clinic.git
+ ```
+ 
 After install the library, find out the ip address of your computer and replace to the baseURL of 
 ```javascript
 // /mobile/src/utils/request.ts
@@ -35,7 +47,7 @@ const config = {
 ...
 ```
 
-After setup SQL database, initialize the database by execute the /init.sql
+After setup SQL database, initialize the database by execute the /server/init.sql
  
 #Installation
 Install the dependencies and devDependencies and start the backend server.
@@ -57,3 +69,9 @@ Build app and execute in simulatoor
 $ cd mobile
 $ yarn run [ios/android]
 ```
+# Server Api Testing
+1. import /server/server_test.json into postman
+2. click runner
+3. Select "ClinicCodingTest"
+4. Click "Run ClinicCodingTest" Button
+5. View the result
