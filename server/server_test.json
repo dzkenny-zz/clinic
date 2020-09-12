@@ -1,0 +1,1071 @@
+{
+	"info": {
+		"_postman_id": "f6a6892f-a4d2-4a49-9074-7f23b9e86198",
+		"name": "ClinicCodingTest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "SignUp",
+			"item": [
+				{
+					"name": "Missing email",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "225c3fce-5c4c-49ec-b0f3-09d0bcece1e3",
+								"exec": [
+									"var userCode = new Date().getTime().toString();\r",
+									"pm.globals.set(\"userCode\", userCode);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "704704f5-adf4-400a-8286-b5222b7cb8c1",
+								"exec": [
+									"pm.test(\"Missing Email\", function() {\r",
+									"    pm.response.to.be.error;\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"00000000\",\r\n    \"name\": \"Clinic{{userCode}}\",\r\n    \"address\": \"{{userCode}} Clinic Location\",\r\n    \"phone\": \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://[::1]:3000/signup",
+							"protocol": "http",
+							"host": [
+								"[::1]"
+							],
+							"port": "3000",
+							"path": [
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Missing Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "eb80b16c-7521-4704-b3dc-1d7f7479930c",
+								"exec": [
+									"pm.test(\"Missing Password\", function() {\r",
+									"    pm.response.to.be.ok;\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.code).to.equal(304);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"clinic{{userCode}}@abc.com\",\r\n    \"name\": \"Clinic{{userCode}}\",\r\n    \"address\": \"{{userCode}} Clinic Location\",\r\n    \"phone\": \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://[::1]:3000/signup",
+							"protocol": "http",
+							"host": [
+								"[::1]"
+							],
+							"port": "3000",
+							"path": [
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Missing Name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d7e9aac3-4c3b-45e7-a9cb-31e7f0a3b64f",
+								"exec": [
+									"pm.test(\"Missing Name\", function() {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.code).to.equal(304);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"clinic{{userCode}}@abc.com\",\r\n    \"password\": \"00000000\",\r\n    \"address\": \"{{userCode}} Clinic Location\",\r\n    \"phone\": \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://[::1]:3000/signup",
+							"protocol": "http",
+							"host": [
+								"[::1]"
+							],
+							"port": "3000",
+							"path": [
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Missing Address",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "228628fc-c0b5-4ab7-b20a-5d2e51f08c16",
+								"exec": [
+									"pm.test(\"Missing Address\", function() {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.code).to.equal(304);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"clinic{{userCode}}@abc.com\",\r\n    \"name\": \"Clinic{{userCode}}\",\r\n    \"password\": \"00000000\",\r\n    \"phone\": \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://[::1]:3000/signup",
+							"protocol": "http",
+							"host": [
+								"[::1]"
+							],
+							"port": "3000",
+							"path": [
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Missing Phone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7a54f5b8-34c4-44b0-a4d5-6833add75b94",
+								"exec": [
+									"pm.test(\"Missing Phone\", function() {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.code).to.equal(304);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"clinic{{userCode}}@abc.com\",\r\n    \"name\": \"Clinic{{userCode}}\",\r\n    \"address\": \"{{userCode}} Clinic Location\",\r\n    \"password\": \"00000000\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://[::1]:3000/signup",
+							"protocol": "http",
+							"host": [
+								"[::1]"
+							],
+							"port": "3000",
+							"path": [
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "09f678a0-a2ca-40bd-918d-0171b0eaefe8",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "66b031da-2195-4313-8f22-1d5db4006123",
+								"exec": [
+									"pm.test(\"Register User\", function() {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.code).to.equal(201);\r",
+									"\r",
+									"    pm.globals.set(\"token\", jsonData.token);\r",
+									"    pm.globals.set(\"userId\", jsonData.payload.user.id);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"clinic{{userCode}}@abc.com\",\r\n    \"name\": \"Clinic{{userCode}}\",\r\n    \"address\": \"{{userCode}} Clinic Location\",\r\n    \"password\": \"00000000\",\r\n    \"phone\": \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://[::1]:3000/signup",
+							"protocol": "http",
+							"host": [
+								"[::1]"
+							],
+							"port": "3000",
+							"path": [
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Same User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7e65fb9d-7cc0-4318-9f08-d9f224e56e92",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "10d1e679-cddd-4f9c-af3e-5877ae4b4a36",
+								"exec": [
+									"pm.test(\"Register With Same Username\", function() {\r",
+									"    pm.response.to.be.error;\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"clinic{{userCode}}@abc.com\",\r\n    \"name\": \"Clinic{{userCode}}\",\r\n    \"address\": \"{{userCode}} Clinic Location\",\r\n    \"password\": \"00000000\",\r\n    \"phone\": \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://[::1]:3000/signup",
+							"protocol": "http",
+							"host": [
+								"[::1]"
+							],
+							"port": "3000",
+							"path": [
+								"signup"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "invalid email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c691fee9-aff4-478c-acad-0cd087df8031",
+								"exec": [
+									"pm.test(\"Invalid Email\", function() {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.code).to.equal(401);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"clinic{{userCode}}@abc.com\",\r\n    \"password\": \"00000001\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://[::1]:3000/login",
+							"protocol": "http",
+							"host": [
+								"[::1]"
+							],
+							"port": "3000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "invalid Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4d360e3e-5933-453e-ac0e-632c847f6c81",
+								"exec": [
+									"pm.test(\"Invalid Password\", function() {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.code).to.equal(401);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"clinic{{userCode}}123@abc.com\",\r\n    \"password\": \"00000000\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://[::1]:3000/login",
+							"protocol": "http",
+							"host": [
+								"[::1]"
+							],
+							"port": "3000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f607493f-e1b1-42ba-9d3b-aa7270134820",
+								"exec": [
+									"pm.test(\"Login User\", function() {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.code).to.equal(200);\r",
+									"\r",
+									"    pm.globals.set(\"token\", jsonData.payload.token);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"clinic{{userCode}}@abc.com\",\r\n    \"password\": \"00000000\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://[::1]:3000/login",
+							"protocol": "http",
+							"host": [
+								"[::1]"
+							],
+							"port": "3000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Records",
+			"item": [
+				{
+					"name": "create",
+					"item": [
+						{
+							"name": "Missing token",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "3234ac7a-6b29-44d9-a2ce-388f46d31bc8",
+										"exec": [
+											"var code = new Date().getTime();\r",
+											"pm.globals.set(\"resultCode\", code.toString());\r",
+											"pm.globals.set(\"recordTime\", code);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "94cc8181-ff83-43a5-bed5-ae0cf5257bc9",
+										"exec": [
+											"pm.test(\"Missing Token\", function() {\r",
+											"    pm.response.to.be.error;\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"doctor\": \"Doctor {{resultCode}}\",\r\n    \"patient\": \"Patient {{resultCode}}\",\r\n    \"diagonsis\": \"Diagonsis {{resultCode}}\",\r\n    \"medication\": \"Miagonsis {{resultCode}}\",\r\n    \"fee\": 123,\r\n    \"followUp\": true,\r\n    \"dateTime\": {{recordTime}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://[::1]:3000/consult-records",
+									"protocol": "http",
+									"host": [
+										"[::1]"
+									],
+									"port": "3000",
+									"path": [
+										"consult-records"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Missing Doctor",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "199dc833-443d-44ac-ba4a-c7d44f63fa1b",
+										"exec": [
+											"var code = new Date().getTime();\r",
+											"pm.globals.set(\"resultCode\", code.toString());\r",
+											"pm.globals.set(\"recordTime\", code);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "3e4974ea-4f9e-449f-bac6-b5aaed7e87e8",
+										"exec": [
+											"pm.test(\"Missing Doctor\", function() {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.code).to.equal(304);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"patient\": \"Patient {{resultCode}}\",\r\n    \"diagonsis\": \"Diagonsis {{resultCode}}\",\r\n    \"medication\": \"Miagonsis {{resultCode}}\",\r\n    \"fee\": 123,\r\n    \"followUp\": true,\r\n    \"dateTime\": {{recordTime}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://[::1]:3000/consult-records",
+									"protocol": "http",
+									"host": [
+										"[::1]"
+									],
+									"port": "3000",
+									"path": [
+										"consult-records"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Missing Patient",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "7ade4616-aa5e-40d4-bd78-7476ed6506a8",
+										"exec": [
+											"var code = new Date().getTime();\r",
+											"pm.globals.set(\"resultCode\", code.toString());\r",
+											"pm.globals.set(\"recordTime\", code);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "48bc79c3-4f76-4806-8c94-847bf2bedacc",
+										"exec": [
+											"pm.test(\"Missing Patient\", function() {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.code).to.equal(304);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"doctor\": \"Doctor {{resultCode}}\",\r\n    \"diagonsis\": \"Diagonsis {{resultCode}}\",\r\n    \"medication\": \"Miagonsis {{resultCode}}\",\r\n    \"fee\": 123,\r\n    \"followUp\": true,\r\n    \"dateTime\": {{recordTime}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://[::1]:3000/consult-records",
+									"protocol": "http",
+									"host": [
+										"[::1]"
+									],
+									"port": "3000",
+									"path": [
+										"consult-records"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Missing Fee",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "6cc0e7e8-8588-433d-98e3-dfd9d8bc14f5",
+										"exec": [
+											"var code = new Date().getTime();\r",
+											"pm.globals.set(\"resultCode\", code.toString());\r",
+											"pm.globals.set(\"recordTime\", code);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "e00836ae-7bed-4817-917e-acf44e684f39",
+										"exec": [
+											"pm.test(\"Missing Fee\", function() {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.code).to.equal(304);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"doctor\": \"Doctor {{resultCode}}\",\r\n    \"patient\": \"Patient {{resultCode}}\",\r\n    \"diagonsis\": \"Diagonsis {{resultCode}}\",\r\n    \"medication\": \"Miagonsis {{resultCode}}\",\r\n    \"fee\": 0,\r\n    \"followUp\": true,\r\n    \"dateTime\": {{recordTime}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://[::1]:3000/consult-records",
+									"protocol": "http",
+									"host": [
+										"[::1]"
+									],
+									"port": "3000",
+									"path": [
+										"consult-records"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Record",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "bc1d9ef6-269c-450f-b43b-33c92fb400d1",
+										"exec": [
+											"var code = new Date().getTime();\r",
+											"pm.globals.set(\"resultCode\", code.toString());\r",
+											"pm.globals.set(\"recordTime\", code);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"id": "c6b4f744-9166-4930-b9ca-1ce3b9987af8",
+										"exec": [
+											"pm.test(\"Create Record\", function() {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.code).to.equal(201);\r",
+											"\r",
+											"    pm.globals.set(\"Record Id\", jsonData.payload.id);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"doctor\": \"Doctor {{resultCode}}\",\r\n    \"patient\": \"Patient {{resultCode}}\",\r\n    \"diagonsis\": \"Diagonsis {{resultCode}}\",\r\n    \"medication\": \"Miagonsis {{resultCode}}\",\r\n    \"fee\": 123,\r\n    \"followUp\": true,\r\n    \"dateTime\": {{recordTime}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://[::1]:3000/consult-records",
+									"protocol": "http",
+									"host": [
+										"[::1]"
+									],
+									"port": "3000",
+									"path": [
+										"consult-records"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "getRecord",
+					"item": [
+						{
+							"name": "Missing Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c245cf75-3b59-49e5-9c6c-8dae19288a07",
+										"exec": [
+											"pm.test(\"Missing Token\", function() {\r",
+											"    pm.response.to.be.error;\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://[::1]:3000/consult-records/{{Record Id}}",
+									"protocol": "http",
+									"host": [
+										"[::1]"
+									],
+									"port": "3000",
+									"path": [
+										"consult-records",
+										"{{Record Id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Incorrect id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f6d7b8a5-dbc4-46c7-8f55-c9fc085b5ba4",
+										"exec": [
+											"pm.test(\"Missing Token\", function() {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.code).to.equal(404);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://[::1]:3000/consult-records/{{Record Id}}-error",
+									"protocol": "http",
+									"host": [
+										"[::1]"
+									],
+									"port": "3000",
+									"path": [
+										"consult-records",
+										"{{Record Id}}-error"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get record",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "06b53778-3e08-4f8d-a99b-86cc5cb1847c",
+										"exec": [
+											"pm.test(\"Missing Token\", function() {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.code).to.equal(200);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://[::1]:3000/consult-records/{{Record Id}}",
+									"protocol": "http",
+									"host": [
+										"[::1]"
+									],
+									"port": "3000",
+									"path": [
+										"consult-records",
+										"{{Record Id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "getRecords",
+					"item": [
+						{
+							"name": "Missing Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4c7e2bf4-3c91-4248-894e-5a7758ef0585",
+										"exec": [
+											"pm.test(\"Missing Token\", function() {\r",
+											"    pm.response.to.be.error;\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "1f0c08cd-8875-4ca5-ae0d-71123f5d3eb3",
+										"exec": [
+											"var today = new Date();\r",
+											"var month = (today.getMonth() + 1);\r",
+											"var date = today.getDate();\r",
+											"pm.globals.set(\"today\", today.getFullYear() + \"-\" + (month < 10 ? \"0\" : \"\") + month + \"-\" +  (date < 10 ? \"0\" : \"\") + date);\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://[::1]:3000/consult-records?startDate={{today}}&endDate={{today}}",
+									"protocol": "http",
+									"host": [
+										"[::1]"
+									],
+									"port": "3000",
+									"path": [
+										"consult-records"
+									],
+									"query": [
+										{
+											"key": "startDate",
+											"value": "{{today}}"
+										},
+										{
+											"key": "endDate",
+											"value": "{{today}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get records",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "067a359e-a637-46a7-b8f3-9706452789c8",
+										"exec": [
+											"pm.test(\"Missing Token\", function() {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.code).to.equal(200);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://[::1]:3000/consult-records?startDate={{today}}&endDate={{today}}",
+									"protocol": "http",
+									"host": [
+										"[::1]"
+									],
+									"port": "3000",
+									"path": [
+										"consult-records"
+									],
+									"query": [
+										{
+											"key": "startDate",
+											"value": "{{today}}"
+										},
+										{
+											"key": "endDate",
+											"value": "{{today}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

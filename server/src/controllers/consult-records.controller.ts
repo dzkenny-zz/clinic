@@ -196,7 +196,7 @@ export class ConsultRecordsController {
     } catch (error) {
       console.error(`cannot found consult record: ${error.message}`);
       return new Response({
-        code: 500,
+        code: 404,
         message: 'Cannot found relative consult record'
       });
     }

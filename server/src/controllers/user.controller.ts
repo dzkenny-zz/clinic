@@ -212,7 +212,7 @@ export class UserController {
     const savedClinic = await this.clinicRepository.create(clinic);
 
     return new Response({
-      code: 200,
+      code: 201,
       payload: {
         user: savedUser,
         token,
